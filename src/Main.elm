@@ -19,16 +19,17 @@ main =
 type alias User = 
     { uid : Int
     , nickname : String
-    , icon : List Int
+    , icon : String
     }
 
 type NetMessage = 
-    LoginResponse
+    LoginResp
         { users : List User }
-    | LoginRequest
+    | LoginReq
         { username : String
         , password : String
         }
+
 
 type alias Packet = 
     { kind : Int
@@ -38,7 +39,8 @@ type alias Packet =
     }
 
 type alias ChatLine =
-    { user : String
+    { sequence : Int
+    , user : String
     , text : String
     }
 
@@ -52,7 +54,22 @@ type alias Model =
 type Msg = 
     SendNet String
     | UpdateStr String
+    | ServerInfo
     | Error String
+    | UserJoined User
+    | UserLeft User
+    | Chat User Int String
+    | NoOp
+
+
+--getPacketType : Int -> Msg
+--getPacketType p =
+--    case p of
+--        2 -> ServerInfo
+--        4 -> LoginResp
+--        100 -> UserJoined
+--        101 -> UserLeft
+--        200 -> Chat
 
 init : () -> ( Model, Cmd Msg )
 init _ = 
@@ -74,6 +91,8 @@ update msg model =
         UpdateStr str ->
             ( { model | message = str }, Cmd.none )
         Error str ->
+            (model, Cmd.none)
+        _ -> 
             (model, Cmd.none)
 
 view : Model -> Html Msg
