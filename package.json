@@ -1,0 +1,19 @@
+{
+  "name": "pollard",
+  "version": "0.0.0",
+  "description": "Neolith GUI client written with Elm on Electron",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "neolith",
+    "hotline",
+    "elm"
+  ],
+  "author": "assertivist",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "electron": "^4.1.4"
+  }
+}
