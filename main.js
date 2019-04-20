@@ -12,7 +12,7 @@ app.on('ready', function() {
 		height:768
 	})
 
-	mainWindow.loadUrl(`file://${__dirname }/index.html`)
+	mainWindow.loadURL(`file://${__dirname }/index.html`)
 	mainWindow.webContents.openDevTools()
 
 	mainWindow.on('closed', function() { mainWindow = null })

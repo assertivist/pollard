@@ -3,11 +3,16 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Pollard</title>
+	<script type="text/javascript" src="elm.js"></script>
 	<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div id="container"></div>
+	<div id="cont"></div>
 </body>
-<script type="text/javascript" src="ports.js"></script>
+<script type="text/javascript">
+	var app = Elm.Main.init({
+		node: document.getElementById("cont")
+	});
+</script>
 </html>
 
