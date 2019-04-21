@@ -32,6 +32,7 @@ fn main() {
         .debug(true)
         .user_data(0)
         .invoke_handler(|_webview, _arg| {
+            //match serde_json::from_str(_arg).unwrap() {}
         	match _arg {
         		"init" => {
 

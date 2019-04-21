@@ -102,7 +102,7 @@ init _ =
             , (ChatLine 4 "Swordfish" "oh my")
             , (ChatLine 5 "croc" "That is rad Sword fish")
             , (ChatLine 6 "croc" "i cannot wear shoes because I don't have feet :(")
-            , (ChatLine 6 "aureus" ":D")
+            , (ChatLine 7 "aureus" ":D")
             ]
         , myid = 1
         , mynickname = "croc"
@@ -117,14 +117,11 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model = 
     case msg of
         SendNet str ->
-            ( model, netWrite str )
+            ( { model | message = "", chat = (ChatLine 0 model.mynickname str) :: model.chat }, netWrite str )
         UpdateStr str ->
             ( { model | message = str }, Cmd.none )
         Error str ->
             (model, Cmd.none)
-        SendChat ->
-
-            (model, netWrite model.message)
         _ -> 
             (model, Cmd.none)
 
@@ -173,7 +170,7 @@ mainWindow model =
                     , onChange = UpdateStr
                     , placeholder = Nothing
                     , spellcheck = True
-                    , text = ""
+                    , text = model.message
                     }
                 , button [ Font.size 13
                          , paddingXY 30 0
@@ -188,7 +185,7 @@ mainWindow model =
                             , color = lighter_bg
                             }
                          ]
-                    { onPress = Nothing
+                    { onPress = Just (SendNet model.message)
                     , label = text "Send"
                     }
                 ]

@@ -6,6 +6,6 @@ var app = Elm.Main.init({
 });
 
 app.ports.netWrite.subscribe(function (str) {
-	console.log("received: ", str);
-	external.invoke('test');
+	//console.log("received: ", str);
+	external.invoke('test', str);
 });
