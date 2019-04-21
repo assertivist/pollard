@@ -27,8 +27,8 @@ fn main() {
     let webview = web_view::builder()
         .title("Pollard")
         .content(Content::Html(html))
-        .size(320, 480)
-        .resizable(true)
+        .size(632, 600)
+        .resizable(false)
         .debug(true)
         .user_data(0)
         .invoke_handler(|_webview, _arg| {
