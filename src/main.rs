@@ -1,9 +1,11 @@
 #![windows_subsystem = "windows"]
 
 extern crate web_view;
+extern crate serde_derive;
+extern crate serde_json;
 
 use web_view::*;
-
+use serde_derive::Deserialize;
 
 fn main() {
     let html = format!(r#"
@@ -32,10 +34,11 @@ fn main() {
         .debug(true)
         .user_data(0)
         .invoke_handler(|_webview, _arg| {
+        	use self::Cmd::*;
             match serde_json::from_str(_arg).unwrap() {
                 Init => (),
                 Log { text } => println!("{}", text),
-                Login { un, pw } => (),
+                Login { username, password } => (),
                 SendChat { text } => println!("chat: {}", text),
                 Logout => ()
             }
