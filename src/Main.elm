@@ -13,6 +13,8 @@ import Browser
 import Json.Encode exposing (Value)
 import Json.Decode as Decode
 
+import MsgPack exposing (..)
+
 main : Program () Model Msg
 main =
     Browser.element
