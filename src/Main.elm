@@ -118,13 +118,21 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model = 
     case msg of
         SendChat str ->
-            ( { model | inputline = "", chat =  model.chat ++ [(ChatLine 0 model.mynickname str)] }, chat str )
+            ( { model | 
+                inputline = "",
+                chat = newChatLines model str
+              }, chat str )
         InputLine str ->
             ( { model | inputline = str }, Cmd.none )
         Error str ->
             (model, Cmd.none)
         _ -> 
             (model, Cmd.none)
+
+
+newChatLines : Model -> String -> List ChatLine
+newChatLines model str = 
+    model.chat ++ [(ChatLine 0 model.mynickname str)]
 
 
 view : Model -> Html Msg
