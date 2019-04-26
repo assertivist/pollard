@@ -54,7 +54,7 @@ type alias ChatLine =
     }
 
 type alias Model =
-    { message : String
+    { inputline : String
     , users : List User
     , chat : List ChatLine
     , myid : Int
@@ -63,14 +63,13 @@ type alias Model =
 
 
 type Msg = 
-    SendNet String
-    | UpdateStr String
+    SendChat String
+    | InputLine String
     | ServerInfo
     | Error String
     | UserJoined User
     | UserLeft User
     | Chat User Int String
-    | SendChat
     | NoOp
 
 
@@ -85,7 +84,7 @@ type Msg =
 
 init : () -> ( Model, Cmd Msg )
 init _ = 
-    ( { message = "Hello world"
+    ( { inputline = "Hello world"
         , users = 
             [ (User 1 "povertio" True "data:image/png;base64,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")
             , (User 2 "Swordfish" False "data:image/png;base64,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")
@@ -112,16 +111,16 @@ init _ =
 
 
 
-port netWrite : String -> Cmd msg
+port chat : String -> Cmd msg
 port netRead : (Value -> msg) -> Sub msg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model = 
     case msg of
-        SendNet str ->
-            ( { model | message = "", chat =  model.chat ++ [(ChatLine 0 model.mynickname str)] }, netWrite str )
-        UpdateStr str ->
-            ( { model | message = str }, Cmd.none )
+        SendChat str ->
+            ( { model | inputline = "", chat =  model.chat ++ [(ChatLine 0 model.mynickname str)] }, chat str )
+        InputLine str ->
+            ( { model | inputline = str }, Cmd.none )
         Error str ->
             (model, Cmd.none)
         _ -> 
@@ -169,10 +168,10 @@ mainWindow model =
                             , Font.size 11
                             ] 
                     { label = labelHidden "Chat input"
-                    , onChange = UpdateStr
+                    , onChange = InputLine
                     , placeholder = Nothing
                     , spellcheck = True
-                    , text = model.message
+                    , text = model.inputline
                     }
                 , button [ Font.size 13
                          , paddingXY 30 0
@@ -187,7 +186,7 @@ mainWindow model =
                             , color = lighter_bg
                             }
                          ]
-                    { onPress = Just (SendNet model.message)
+                    { onPress = Just (SendChat model.inputline)
                     , label = text "Send"
                     }
                 ]
@@ -252,7 +251,7 @@ decodeValue x =
     in
         case result of
             Ok string ->
-                UpdateStr string
+                Debug.todo "Handle incoming thing"
             Err _ ->
                 Error "Got sosmething weird from JS"
             
