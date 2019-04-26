@@ -119,7 +119,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model = 
     case msg of
         SendNet str ->
-            ( { model | message = "", chat = (ChatLine 0 model.mynickname str) :: model.chat }, netWrite str )
+            ( { model | message = "", chat =  model.chat ++ [(ChatLine 0 model.mynickname str)] }, netWrite str )
         UpdateStr str ->
             ( { model | message = str }, Cmd.none )
         Error str ->

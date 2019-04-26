@@ -5,7 +5,22 @@ var app = Elm.Main.init({
 	flags: undefined
 });
 
+var rpc = {
+	invoke: function(arg) { window.external.invoke(JSON.stringify(arg)); },
+	init : function() { rpc.invoke({cmd : 'init'}); },
+	log: function() {
+	    var s = '';
+	    for (var i = 0; i < arguments.length; i++) {
+	      if (i != 0) {
+		s = s + ' ';
+	      }
+	      s = s + JSON.stringify(arguments[i]);
+	    }
+	    rpc.invoke({cmd : 'log', text : s});
+	}
+}
+
 app.ports.netWrite.subscribe(function (str) {
 	//console.log("received: ", str);
-	external.invoke('test', str);
+	rpc.log("String from elm: " + str);
 });
