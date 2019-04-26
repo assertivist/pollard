@@ -17,10 +17,10 @@ var rpc = {
 	      s = s + JSON.stringify(arguments[i]);
 	    }
 	    rpc.invoke({cmd : 'log', text : s});
+	},
+	chat: function(str) {
+		rpc.invoke({cmd: 'sendChat', text: str});
 	}
 }
 
-app.ports.netWrite.subscribe(function (str) {
-	//console.log("received: ", str);
-	rpc.log("String from elm: " + str);
-});
+app.ports.netWrite.subscribe(rpc.chat);
