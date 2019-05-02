@@ -23,4 +23,4 @@ var rpc = {
 	}
 }
 
-app.ports.netWrite.subscribe(rpc.chat);
+app.ports.chat.subscribe(rpc.chat);

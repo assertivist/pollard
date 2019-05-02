@@ -1,9 +1,10 @@
 port module Main exposing (main)
 
 import Html exposing (Html)
+import Html.Attributes
 --import Html.Events exposing (onClick, onInput)
 --import Html.Attributes exposing (type_, value)
-import Element exposing (Element, el, text, paragraph, maximum, minimum, px, row, column, height, width, alignTop, alignRight, alignBottom, alignLeft, fillPortion, fill, width, rgb255, spacing, centerY, padding, paddingXY)
+import Element exposing (Element, Attribute, el, text, paragraph, maximum, minimum, px, row, column, height, width, alignTop, alignRight, alignBottom, alignLeft, fillPortion, fill, width, rgb255, spacing, centerY, padding, paddingXY)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
@@ -138,67 +139,99 @@ newChatLines model str =
 view : Model -> Html Msg
 view model = 
     Element.layout []
-        (mainWindow model)
+        (drawWindows model)
 
 
 white = rgb255 255 255 255
 dark_bg = rgb255 24 24 24
 lighter_bg = rgb255 165 165 165
 
-mainWindow : Model -> Element Msg
-mainWindow model =
-    column [] 
-        [
-            row [ width fill
-                , height (fill |> minimum 570)
-                , alignTop
-                , spacing 0
-                , padding 0
-                ]
-                [ column [ width (fill |> minimum 400)
-                         , alignBottom 
-                         , paddingXY 0 10
-                         ]
-                    (List.map chatElement model.chat)
-                , column [ width (px 232)
-                         , height (fill |> minimum 550)
-                         , padding 0
-                         , spacing 0
-                         , Background.color dark_bg
-                         , alignRight
-                         ]
-                    (List.map userElement model.users)
-                ],
-            row [ width fill
-                , height (fill |> maximum 50)
-                , alignBottom]
-                [ multiline [ height (px 30)
-                            , Font.size 11
-                            ] 
-                    { label = labelHidden "Chat input"
-                    , onChange = InputLine
-                    , placeholder = Nothing
-                    , spellcheck = True
-                    , text = model.inputline
-                    }
-                , button [ Font.size 13
-                         , paddingXY 30 0
-                         , height fill
-                         , Background.color dark_bg
-                         , Font.color white
-                         , Border.rounded 10
-                         , Border.innerShadow 
-                            { offset = (-3.0,-3.0)
-                            , size = 1.0
-                            , blur = 3.0
-                            , color = lighter_bg
-                            }
-                         ]
-                    { onPress = Just (SendChat model.inputline)
-                    , label = text "Send"
-                    }
-                ]
+floaterAttrs : Int -> Int -> List(Attribute Msg)
+floaterAttrs x y = List.map Element.htmlAttribute
+    [ Html.Attributes.style "position" "fixed"
+    , Html.Attributes.style "z-index" "1000"
+    , Html.Attributes.style "float" "none"
+    , Html.Attributes.style "display" "block"
+    , Html.Attributes.style "left" (String.fromInt x ++ "px")
+    , Html.Attributes.style "top" (String.fromInt y ++ "px") 
+    ]
+
+uiWindow : List (Attribute Msg) -> List (Element Msg) -> Element Msg
+uiWindow attrs elements  = 
+    let windowAttrs = List.append [ padding 0
+           , spacing 0
+           , alignRight
+           ] (floaterAttrs 30 30)
+        in 
+    column windowAttrs
+        [ el [ height (px 25)
+             , width fill
+             , Font.color white
+             , Background.color (rgb255 20 20 80)
+             ] 
+             (text "Window Title")
+        , el [ ] (column attrs elements)
         ]
+
+userListView : List(User) -> Element Msg 
+userListView ul = 
+    column [ width (px 232)
+           , height (fill |> minimum 300)
+           , padding 0
+           , spacing 0
+           , Background.color dark_bg   
+           ]
+        (List.map userElement ul)
+
+chatView : Model -> Element Msg
+chatView model =
+    column [] 
+        [ row [ width fill
+            , height (fill |> minimum 570)
+            , alignTop
+            , spacing 0
+            , padding 0
+            ]
+            [ column [ width (fill |> minimum 400)
+                     , alignBottom 
+                     , paddingXY 0 10
+                     ]
+                (List.map chatElement model.chat) ]
+        , row [ width fill
+            , height (fill |> maximum 50)
+            , alignBottom]
+            [ multiline [ height (px 30)
+                        , Font.size 11
+                        ] 
+                { label = labelHidden "Chat input"
+                , onChange = InputLine
+                , placeholder = Nothing
+                , spellcheck = True
+                , text = model.inputline
+                }
+            , button [ Font.size 13
+                     , paddingXY 30 0
+                     , height fill
+                     , Background.color dark_bg
+                     , Font.color white
+                     , Border.rounded 10
+                     , Border.innerShadow 
+                        { offset = (-3.0,-3.0)
+                        , size = 1.0
+                        , blur = 3.0
+                        , color = lighter_bg
+                        }
+                     ]
+                { onPress = Just (SendChat model.inputline)
+                , label = text "Send"
+                }
+            ]
+        ]
+
+ 
+drawWindows : Model -> Element Msg
+drawWindows model =
+    uiWindow [width (px 232)] [userListView model.users]
 
 
 chatElement : ChatLine -> Element Msg
